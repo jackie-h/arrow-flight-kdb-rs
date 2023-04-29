@@ -1,5 +1,5 @@
 [package]
-name = "arrow-rs-kdb"
+name = "arrow-flight-kdb-rs"
 version = "0.1.0"
 edition = "2021"
 
@@ -11,3 +11,6 @@ path = "src/server.rs"
 
 [dependencies]
 arrow-flight = "38.0.0"
+tonic = { version = "0.9", default-features = false, features = ["transport", "codegen", "prost"] }
+futures = { version = "0.3", default-features = false, features = ["alloc"] }
+tokio = { version = "1.0", default-features = false, features = ["macros", "rt", "rt-multi-thread"] }

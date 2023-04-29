@@ -105,6 +105,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "arrow-flight-kdb-rs"
+version = "0.1.0"
+dependencies = [
+ "arrow-flight",
+ "futures",
+ "tokio",
+ "tonic",
+]
+
+[[package]]
 name = "arrow-ipc"
 version = "38.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -116,13 +126,6 @@ dependencies = [
  "arrow-data",
  "arrow-schema",
  "flatbuffers",
-]
-
-[[package]]
-name = "arrow-rs-kdb"
-version = "0.1.0"
-dependencies = [
- "arrow-flight",
 ]
 
 [[package]]
