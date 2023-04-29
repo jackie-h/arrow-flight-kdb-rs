@@ -5,6 +5,7 @@ mod tests {
     use arrow_flight::{FlightClient, FlightDescriptor};
     use arrow_flight::error::FlightError;
     use arrow_flight::flight_service_server::FlightServiceServer;
+    use tokio::time::sleep;
     use tonic::Code;
     use tonic::transport::{Channel, Server, Uri};
 
@@ -13,12 +14,19 @@ mod tests {
     #[tokio::test]
     async fn test_get_flight_info() {
 
-        //Server
         let addr = "127.0.0.1:9001".parse().unwrap();
-        //let addr = "[::1]:50051".parse()?;
-        let service = FlightServiceImpl {};
-        let svc = FlightServiceServer::new(service);
-        let serv_res = Server::builder().add_service(svc).serve(addr).await;
+
+        //NOTE MUST BE STARTED IN A SEPARATE THREAD
+        tokio::spawn(async move {
+            let service = FlightServiceImpl {};
+
+            let svc = FlightServiceServer::new(service);
+
+            Server::builder().add_service(svc).serve(addr).await.unwrap();
+        });
+
+        sleep(Duration::from_secs(2)).await;
+
 
         //Client
         let url = format!("http://{}", addr);

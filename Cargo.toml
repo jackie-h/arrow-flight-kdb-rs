@@ -5,6 +5,10 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+#[[bin]]
+#name = "server"
+#path = "src/server.rs"
+
 [dependencies]
 arrow-flight = "38.0.0"
 tonic = { version = "0.9", default-features = false, features = ["transport", "codegen", "prost"] }
@@ -13,3 +17,4 @@ tokio = { version = "1.0", default-features = false, features = ["macros", "rt",
 
 [dev-dependencies]
 tokio-stream = { version = "0.1", features = ["net"] }
+arrow-flight-kdb-rs = { path = ""}

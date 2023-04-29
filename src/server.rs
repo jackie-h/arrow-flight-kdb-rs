@@ -24,8 +24,6 @@ use arrow_flight::{
     flight_service_server::FlightService, Action, ActionType, Criteria, Empty, FlightData, FlightDescriptor, FlightInfo,
     HandshakeRequest, HandshakeResponse, PutResult, SchemaResult, Ticket,
 };
-use arrow_flight::flight_service_server::FlightServiceServer;
-use tonic::transport::Server;
 
 #[derive(Clone)]
 pub struct FlightServiceImpl {}
@@ -122,17 +120,4 @@ impl FlightService for FlightServiceImpl {
     ) -> Result<Response<Self::ListActionsStream>, Status> {
         Err(Status::unimplemented("Implement list_actions"))
     }
-}
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "127.0.0.1:9001".parse()?;
-    //let addr = "[::1]:50051".parse()?;
-    let service = FlightServiceImpl {};
-
-    let svc = FlightServiceServer::new(service);
-
-    Server::builder().add_service(svc).serve(addr).await?;
-
-    Ok(())
 }
