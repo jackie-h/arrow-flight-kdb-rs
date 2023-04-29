@@ -35,24 +35,6 @@ impl FlightService for FlightServiceImpl {
     type HandshakeStream = Pin<
         Box<dyn Stream<Item = Result<HandshakeResponse, Status>> + Send + Sync + 'static>,
     >;
-    type ListFlightsStream =
-    Pin<Box<dyn Stream<Item = Result<FlightInfo, Status>> + Send + Sync + 'static>>;
-    type DoGetStream =
-    Pin<Box<dyn Stream<Item = Result<FlightData, Status>> + Send + Sync + 'static>>;
-    type DoPutStream =
-    Pin<Box<dyn Stream<Item = Result<PutResult, Status>> + Send + Sync + 'static>>;
-    type DoActionStream = Pin<
-        Box<
-            dyn Stream<Item = Result<arrow_flight::Result, Status>>
-            + Send
-            + Sync
-            + 'static,
-        >,
-    >;
-    type ListActionsStream =
-    Pin<Box<dyn Stream<Item = Result<ActionType, Status>> + Send + Sync + 'static>>;
-    type DoExchangeStream =
-    Pin<Box<dyn Stream<Item = Result<FlightData, Status>> + Send + Sync + 'static>>;
 
     async fn handshake(
         &self,
@@ -60,6 +42,9 @@ impl FlightService for FlightServiceImpl {
     ) -> Result<Response<Self::HandshakeStream>, Status> {
         Err(Status::unimplemented("Implement handshake"))
     }
+
+    type ListFlightsStream =
+    Pin<Box<dyn Stream<Item = Result<FlightInfo, Status>> + Send + Sync + 'static>>;
 
     async fn list_flights(
         &self,
@@ -82,12 +67,18 @@ impl FlightService for FlightServiceImpl {
         Err(Status::unimplemented("Implement get_schema"))
     }
 
+    type DoGetStream =
+    Pin<Box<dyn Stream<Item = Result<FlightData, Status>> + Send + Sync + 'static>>;
+
     async fn do_get(
         &self,
         _request: Request<Ticket>,
     ) -> Result<Response<Self::DoGetStream>, Status> {
         Err(Status::unimplemented("Implement do_get"))
     }
+
+    type DoPutStream =
+    Pin<Box<dyn Stream<Item = Result<PutResult, Status>> + Send + Sync + 'static>>;
 
     async fn do_put(
         &self,
@@ -96,19 +87,8 @@ impl FlightService for FlightServiceImpl {
         Err(Status::unimplemented("Implement do_put"))
     }
 
-    async fn do_action(
-        &self,
-        _request: Request<Action>,
-    ) -> Result<Response<Self::DoActionStream>, Status> {
-        Err(Status::unimplemented("Implement do_action"))
-    }
-
-    async fn list_actions(
-        &self,
-        _request: Request<Empty>,
-    ) -> Result<Response<Self::ListActionsStream>, Status> {
-        Err(Status::unimplemented("Implement list_actions"))
-    }
+    type DoExchangeStream =
+    Pin<Box<dyn Stream<Item = Result<FlightData, Status>> + Send + Sync + 'static>>;
 
     async fn do_exchange(
         &self,
@@ -116,11 +96,38 @@ impl FlightService for FlightServiceImpl {
     ) -> Result<Response<Self::DoExchangeStream>, Status> {
         Err(Status::unimplemented("Implement do_exchange"))
     }
+
+    type DoActionStream = Pin<
+        Box<
+            dyn Stream<Item = Result<arrow_flight::Result, Status>>
+            + Send
+            + Sync
+            + 'static,
+        >,
+    >;
+
+    async fn do_action(
+        &self,
+        _request: Request<Action>,
+    ) -> Result<Response<Self::DoActionStream>, Status> {
+        Err(Status::unimplemented("Implement do_action"))
+    }
+
+    type ListActionsStream =
+    Pin<Box<dyn Stream<Item = Result<ActionType, Status>> + Send + Sync + 'static>>;
+
+    async fn list_actions(
+        &self,
+        _request: Request<Empty>,
+    ) -> Result<Response<Self::ListActionsStream>, Status> {
+        Err(Status::unimplemented("Implement list_actions"))
+    }
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse()?;
+    let addr = "127.0.0.1:9001".parse()?;
+    //let addr = "[::1]:50051".parse()?;
     let service = FlightServiceImpl {};
 
     let svc = FlightServiceServer::new(service);

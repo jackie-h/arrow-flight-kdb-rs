@@ -14,3 +14,6 @@ arrow-flight = "38.0.0"
 tonic = { version = "0.9", default-features = false, features = ["transport", "codegen", "prost"] }
 futures = { version = "0.3", default-features = false, features = ["alloc"] }
 tokio = { version = "1.0", default-features = false, features = ["macros", "rt", "rt-multi-thread"] }
+
+[dev-dependencies]
+tokio-stream = { version = "0.1", features = ["net"] }

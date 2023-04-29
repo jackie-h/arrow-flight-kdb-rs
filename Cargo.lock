@@ -111,6 +111,7 @@ dependencies = [
  "arrow-flight",
  "futures",
  "tokio",
+ "tokio-stream",
  "tonic",
 ]
 
