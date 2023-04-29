@@ -18,14 +18,14 @@
 use std::pin::Pin;
 
 use futures::Stream;
-use tonic::transport::Server;
 use tonic::{Request, Response, Status, Streaming};
 
 use arrow_flight::{
-    flight_service_server::FlightService, flight_service_server::FlightServiceServer,
-    Action, ActionType, Criteria, Empty, FlightData, FlightDescriptor, FlightInfo,
+    flight_service_server::FlightService, Action, ActionType, Criteria, Empty, FlightData, FlightDescriptor, FlightInfo,
     HandshakeRequest, HandshakeResponse, PutResult, SchemaResult, Ticket,
 };
+use arrow_flight::flight_service_server::FlightServiceServer;
+use tonic::transport::Server;
 
 #[derive(Clone)]
 pub struct FlightServiceImpl {}
