@@ -3,18 +3,12 @@ name = "arrow-flight-kdb-rs"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-#[[bin]]
-#name = "server"
-#path = "src/server.rs"
-
 [dependencies]
 arrow-flight = "38.0.0"
 tonic = { version = "0.9", default-features = false, features = ["transport", "codegen", "prost"] }
 futures = { version = "0.3", default-features = false, features = ["alloc"] }
 tokio = { version = "1.0", default-features = false, features = ["macros", "rt", "rt-multi-thread"] }
+kdbplus = { version = "0.3.8", features = ["ipc"] }
 
 [dev-dependencies]
 tokio-stream = { version = "0.1", features = ["net"] }
-arrow-flight-kdb-rs = { path = ""}

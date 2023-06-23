@@ -15,15 +15,18 @@
 // specific language governing permissions and limitations
 // under the License.
 
+use std::any::Any;
 use std::pin::Pin;
 
 use futures::Stream;
-use tonic::{Request, Response, Status, Streaming};
+use tonic::{Code, Request, Response, Status, Streaming};
 
 use arrow_flight::{
     flight_service_server::FlightService, Action, ActionType, Criteria, Empty, FlightData, FlightDescriptor, FlightInfo,
     HandshakeRequest, HandshakeResponse, PutResult, SchemaResult, Ticket,
 };
+
+use kdbplus::ipc::{QStream, ConnectionMethod};
 
 #[derive(Clone)]
 pub struct FlightServiceImpl {}
@@ -48,6 +51,27 @@ impl FlightService for FlightServiceImpl {
         &self,
         _request: Request<Criteria>,
     ) -> Result<Response<Self::ListFlightsStream>, Status> {
+        // Connect to qprocess running on localhost:5001 via TCP
+        let mut socket =
+            QStream::connect(ConnectionMethod::TCP, "localhost", 5001_u16, "ideal:person")
+                .await.map_err(from_kdb_error)?;
+
+        // Send a text form message synchronously
+        let result: kdbplus::ipc::K = socket.send_sync_message(&"tables[]").await
+            .map_err(from_kdb_error)?;
+        let list = result.as_vec::<String>();
+        //result.
+        println!("tables[]: {}", result);
+
+        let info = FlightInfo {
+            schema: schema_bytes,
+            flight_descriptor: Some(flight_desc),
+            endpoint: endpoints,
+            total_records: num_rows as i64,
+            total_bytes: num_bytes as i64,
+        };
+        let resp = Response::new(info);
+
         Err(Status::unimplemented("Implement list_flights"))
     }
 
@@ -55,6 +79,11 @@ impl FlightService for FlightServiceImpl {
         &self,
         _request: Request<FlightDescriptor>,
     ) -> Result<Response<FlightInfo>, Status> {
+
+
+
+        //FlightInfo::new()
+
         Err(Status::unimplemented("Implement get_flight_info"))
     }
 
@@ -120,4 +149,8 @@ impl FlightService for FlightServiceImpl {
     ) -> Result<Response<Self::ListActionsStream>, Status> {
         Err(Status::unimplemented("Implement list_actions"))
     }
+}
+
+fn from_kdb_error(kdb_error: kdbplus::ipc::error::Error) -> Status {
+    Status::new(Code::Internal, kdb_error.to_string())
 }
